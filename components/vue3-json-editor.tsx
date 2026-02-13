@@ -1,4 +1,11 @@
-import { ComponentPublicInstance, defineComponent, getCurrentInstance, onMounted, reactive, watch } from 'vue'
+import {
+  ComponentPublicInstance,
+  defineComponent,
+  getCurrentInstance,
+  onMounted,
+  reactive,
+  watch
+} from 'vue'
 import JsonEditor from './assets/jsoneditor'
 import './assets/jsoneditor.css'
 import './style.css'
@@ -24,6 +31,38 @@ export const Vue3JsonEditor = defineComponent({
     lang: {
       type: String,
       default: 'en'
+    },
+    schema: {
+      type: Object,
+      default: null
+    },
+    schemaRefs: {
+      type: Object,
+      default: null
+    },
+    mainMenuBar: {
+      type: Boolean,
+      default: true
+    },
+    navigationBar: {
+      type: Boolean,
+      default: true
+    },
+    statusBar: {
+      type: Boolean,
+      default: true
+    },
+    enableSort: {
+      type: Boolean,
+      default: true
+    },
+    enableTransform: {
+      type: Boolean,
+      default: true
+    },
+    enableRepair: {
+      type: Boolean,
+      default: true
     }
   },
   setup (props: any, { emit }) {
@@ -50,7 +89,7 @@ export const Vue3JsonEditor = defineComponent({
     })
 
     watch(
-      () => props.modelValue as unknown as any,
+      () => (props.modelValue as unknown) as any,
       async (val) => {
         if (!state.internalChange) {
           state.json = val
@@ -58,12 +97,30 @@ export const Vue3JsonEditor = defineComponent({
           state.error = false
           expandAll()
         }
-      }, { immediate: true })
+      },
+      { immediate: true }
+    )
+
+    watch(
+      () => props.schema,
+      (newSchema) => {
+        if (state.editor && newSchema) {
+          state.editor.setSchema(newSchema, props.schemaRefs)
+        }
+      }
+    )
 
     onMounted(() => {
-      const options = {
+      const options: Record<string, any> = {
         mode: props.mode,
         modes: props.modes,
+        schema: props.schema,
+        schemaRefs: props.schemaRefs,
+        mainMenuBar: props.mainMenuBar,
+        navigationBar: props.navigationBar,
+        statusBar: props.statusBar,
+        enableSort: props.enableSort,
+        enableTransform: props.enableTransform,
         onChange () {
           try {
             const json = state.editor.get()
@@ -83,6 +140,13 @@ export const Vue3JsonEditor = defineComponent({
         onModeChange (mode) {
           emit('mode-change', mode)
           state.expandedModes.includes(mode) && expandAll()
+        },
+        onValidationError (errors: any[]) {
+          emit('validation-error', errors)
+          emit('validate', {
+            valid: errors.length === 0,
+            errors
+          })
         }
       }
       state.editor = new JsonEditor(
@@ -121,7 +185,9 @@ export const Vue3JsonEditor = defineComponent({
                   onSave()
                 }}
                 disabled={state.error}
-              >{state.locale[props.lang].save}</button>
+              >
+                {state.locale[props.lang].save}
+              </button>
             </div>
           )}
         </div>
