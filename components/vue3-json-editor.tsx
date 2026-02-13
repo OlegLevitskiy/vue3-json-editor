@@ -63,6 +63,10 @@ export const Vue3JsonEditor = defineComponent({
     enableRepair: {
       type: Boolean,
       default: true
+    },
+    languages: {
+      type: Object,
+      default: null
     }
   },
   setup (props: any, { emit }) {
@@ -121,6 +125,8 @@ export const Vue3JsonEditor = defineComponent({
         statusBar: props.statusBar,
         enableSort: props.enableSort,
         enableTransform: props.enableTransform,
+        language: props.lang,
+        languages: props.languages,
         onChange () {
           try {
             const json = state.editor.get()
