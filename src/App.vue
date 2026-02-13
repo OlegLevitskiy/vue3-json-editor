@@ -8,7 +8,8 @@
       :show-btns="false"
       :expandedOnStart="false"
       mode="code"
-      lang="en"
+      lang="ru"
+      :languages="customLanguages"
       :enable-transform="false"
       :enable-repair="false"
       :status-bar="false"
@@ -45,6 +46,38 @@ export default defineComponent({
         isActive: true
       }
     })
+
+    const customLanguages = {
+      ru: {
+        // Основные
+        array: 'Массив',
+        object: 'Объект',
+        string: 'Строка',
+        auto: 'Авто',
+
+        // Меню
+        sort: 'Сортировать',
+        transform: 'Преобразовать',
+        undo: 'Отменить',
+        redo: 'Повторить',
+
+        // Ошибки валидации
+        validationCannotMove: 'Невозможно переместить корневой элемент',
+        cannotParseFieldError: 'Невозможно разобрать поле',
+        cannotParseValueError: 'Невозможно разобрать значение',
+        duplicateFieldError: 'Дублирующееся имя поля',
+
+        // Кнопки
+        formatTitle: 'Форматировать JSON',
+        compactTitle: 'Сжать JSON',
+        repairTitle: 'Исправить JSON',
+
+        // Другое
+        empty: 'пусто',
+        showMore: 'показать ещё',
+        showAll: 'показать все'
+      }
+    }
 
     const schema = {
       type: 'object',
@@ -107,7 +140,8 @@ export default defineComponent({
       onJsonSave,
       onError,
       onEditorProvided,
-      onValidate
+      onValidate,
+      customLanguages
     }
   }
 })
