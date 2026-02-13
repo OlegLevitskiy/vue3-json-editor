@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -16,8 +17,15 @@
     "baseUrl": ".",
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"]
     }
   },
-  "exclude": ["./**/*.js", "node_modules", "components"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "components/**/*.ts",
+    "components/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "dist"]
 }
